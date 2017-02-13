@@ -8,7 +8,6 @@ var webpack = require('webpack');
 var webpackDevConfig = require('./webpack.config.dev.js');
 var webpackProdConfig = require('./webpack.config.prod.js');
 var fs = require('fs');
-var path = require('path');
 var sourcemaps = require('gulp-sourcemaps');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
