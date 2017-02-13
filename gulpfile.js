@@ -25,6 +25,15 @@ var eslintConfigConfig = JSON.parse(fs.readFileSync('./.eslintrc_config'));
 var scsslint = require('gulp-scss-lint');
 var stylish = require('gulp-scss-lint-stylish2');
 
+var getGame = function () {
+    var index = (_.includes(process.argv, 'build') ? _.indexOf(process.argv, 'build') :
+        _.includes(process.argv, 'watch') ? _.indexOf(process.argv, 'watch') : -1) + 1;
+
+    if (!index) return;
+
+    return _.replace(process.argv[index], '--', '');
+};
+
 var getEnv = function (environment) {
     switch (environment) {
         case 'dev':
@@ -38,9 +47,8 @@ var getEnv = function (environment) {
     }
 };
 
-// In order for livereload to work, you should run gulp on the host machine
-// unless you have native docker installed.
-var game = argv.game || argv.g;
+var game = getGame();
+
 var nolivereload = argv.nolr;
 var env = getEnv(argv.environment || argv.env || 'prod');
 var debug = argv.debug;
@@ -61,8 +69,8 @@ gulp.task('b', buildTask);
 
 function defineEntries(config) {
     // modify some webpack config options
-    var varsPath = './' + env + '-variables.js';
-    var mediaPath = './make_media_globals.js';
+    var varsPath = '../' + env + '-variables.js';
+    var mediaPath = '../make_media_globals.js';
 
     if (typeof game !== 'string') {
         gutil.log('Your game argument must be a string');
@@ -79,7 +87,7 @@ function defineEntries(config) {
     config.entry = [
         varsPath,
         mediaPath,
-        './' + game + '/index.js',
+        './game-' + game + '/index.js',
     ];
 
     if (env === 'dev' && local) {
@@ -135,8 +143,8 @@ gulp.task('sass', function () {
 
     gulp
     .src([
-        './library/' + game + '/**/*.scss',
-        './library/' + game + '/**/*.css'
+        './library/game-' + game + '/**/*.scss',
+        './library/game-' + game + '/**/*.css'
     ])
     .pipe(header(fs.readFileSync(varsPath, 'utf8')))
     .pipe(sass({
@@ -146,7 +154,7 @@ gulp.task('sass', function () {
     .pipe(sourcemaps.init())
     .pipe(postcss([autoprefixer({ browsers: ['last 5 versions'] })]))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./build/' + game + '/css'))
+    .pipe(gulp.dest('./build/' + game))
     .pipe(livereload());
 
     gulp
@@ -165,7 +173,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('copy-index', function () {
-    var indexPath = path.join('./library', game, 'index.html');
+    var indexPath = './library/game-' + game + '/index.html';
 
     if (typeof game !== 'string') {
         gutil.log('Your game argument must be a string');
@@ -188,7 +196,7 @@ gulp.task('copy-index', function () {
         } else {
             gulp
             .src('./index.html')
-            .pipe(inject(gulp.src(path.join('./library', game, 'config.json')), {
+            .pipe(inject(gulp.src('./library/game-' + game + '/config.json'), {
                 starttag: '<!-- inject:head -->',
                 transform: function (filePath, file) {
                     var config = JSON.parse(file.contents.toString('utf8'));
@@ -208,7 +216,7 @@ gulp.task('copy-index', function () {
                     }
                 }
             }))
-            .pipe(inject(gulp.src(path.join('./library', game, 'config.json')), {
+            .pipe(inject(gulp.src('./library/game-' + game + '/config.json'), {
                 starttag: '<!-- inject:body -->',
                 transform: function (filePath, file) {
                     var config = JSON.parse(file.contents.toString('utf8'));
@@ -269,8 +277,8 @@ function watchTask() {
     });
 
     watch([
-        'library/' + game + '/**/*.scss',
-        'library/' + game + '/**/*.css',
+        'library/game-' + game + '/**/*.scss',
+        'library/game-' + game + '/**/*.css',
         'library/shared/**/*.scss',
         'library/shared/**/*.css',
     ], function () {
@@ -278,24 +286,24 @@ function watchTask() {
     });
 
     watch([
-        'library/' + game + '/media/**/*',
+        'library/game-' + game + '/media/**/*',
     ], function () {
         gulp.start('copy-media');
     });
 
     watch([
-        'library/' + game + '/*.js',
-        'library/' + game + '/**/*.js',
+        'library/game-' + game + '/*.js',
+        'library/game-' + game + '/**/*.js',
         'library/shared/**/*.js',
     ], function () {
         gulp.start('webpack:build');
     });
 
     watch([
-        'library/' + game + '/**/*.html',
-        'library/' + game + '/config.json',
+        'library/game-' + game + '/**/*.html',
+        'library/game-' + game + '/config.json',
         'library/shared/**/*',
-        '!library/' + game + '/**/*.js',
+        '!library/game-' + game + '/**/*.js',
         '!library/shared/**/*.js',
         '!library/shared/**/*.scss',
         '!library/shared/**/*.css',

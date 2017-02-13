@@ -6,6 +6,7 @@
         "ga": true,
         "React": true,
         "ReactDOM": true,
+        "process": true,
         "moment": true,
         "require": true,
         "module": true,
