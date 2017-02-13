@@ -1,0 +1,60 @@
+{
+  "name": "action-items",
+  "version": "0.1.0",
+  "description": "CMWN Action Items Library",
+  "main": "index.html",
+  "scripts": {
+    "start": "webpack-dev-server --progress --inline --hot"
+  },
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "gulp-header": "^1.8.8",
+    "lodash": "^4.14.0",
+    "shortid": "^2.2.6"
+  },
+  "devDependencies": {
+    "autoprefixer": "^6.3.3",
+    "babel": "^5.8.29",
+    "babel-cli": "^6.11.4",
+    "babel-core": "^6.16.0",
+    "babel-eslint": "^6.1.2",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-react-hmre": "^1.1.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "eslint": "^3.11.0",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-react": "^5.2.2",
+    "express": "^4.14.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-eslint": "^2.0.0",
+    "gulp-header": "^1.8.8",
+    "gulp-inject": "^3.0.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-postcss": "^6.1.0",
+    "gulp-sass": "^2.1.1",
+    "gulp-scss-lint": "^0.4.0",
+    "gulp-scss-lint-stylish2": "^2.0.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.5",
+    "json-loader": "^0.5.4",
+    "node-bourbon": "^4.2.8",
+    "node-sass": "^3.10.1",
+    "react-hot-loader": "^1.3.1",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.16.2",
+    "webpack-hot-middleware": "^2.13.2",
+    "yargs": "^3.31.0"
+  },
+  "author": "Max Rafferty",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ginasink/cmwn-games.git"
+  }
+}

@@ -1,0 +1,97 @@
+Options +FollowSymLinks +ExecCGI +Indexes
+
+# Content security policies. Unfortunately we need to use unsafe inlining for the time being because
+# a number of our tools rely on injecting style/script tags (webpack in particular).
+# See http://www.html5rocks.com/en/tutorials/security/content-security-policy/ for additional details
+
+Header set Content-Security-Policy "\
+default-src \
+    https://*.changemyworldnow.com:*; \
+ base-uri \
+    https://*.changemyworldnow.com:*; \
+ style-src \
+    'unsafe-inline' \
+    https://changemyworldnow.com:* \
+    https://*.changemyworldnow.com:* \
+    https://maxcdn.bootstrapcdn.com \
+    https://cdnjs.cloudflare.com \
+    https://fonts.googleapis.com; \
+ script-src \
+    'unsafe-eval' \
+    'unsafe-inline' \
+    http://changemyworldnow.com:* \
+    https://changemyworldnow.com:* \
+    http://*.changemyworldnow.com:* \
+    https://*.changemyworldnow.com:* \
+    https://*.cloudinary.com \
+    https://*.google.com \
+    https://cdnjs.cloudflare.com \
+    https://maxcdn.bootstrapcdn.com \
+    https://*.gstatic.com \
+    https://*.cloudfront.net \
+    https://*.ravenjs.com \
+    https://*.raygun.io \
+    https://*.errorception.com \
+    https://*.google-analytics.com; \
+ frame-src \
+    https://*.changemyworldnow.com \
+    https://widget.cloudinary.com \
+    https://*.viddler.com; \
+ child-src \
+    https://changemyworldnow.com:* \
+    https://*.changemyworldnow.com:* \
+    https://*.cloudinary.com \
+    https://*.viddler.com; \
+ connect-src \
+    https://changemyworldnow.com:* \
+    https://*.changemyworldnow.com \
+    https://*.raygun.io \
+    https://*.getsentry.com \
+    https://*.rollbar.com \
+    https://*.trackjs.com \
+    https://*.google-analytics.com; \
+ font-src \
+    'self' \
+    https://fonts.gstatic.com \
+    https://changemyworldnow.education \
+    https://changemyworldnow.com:* \
+    https://*.changemyworldnow.com:* \
+    https://cdnjs.cloudflare.com \
+    https://maxcdn.bootstrapcdn.com \
+    https://fonts.googleapis.com; \
+ img-src \
+    https://changemyworldnow.com:* \
+    https://*.changemyworldnow.com:* \
+    https://*.cloudinary.com \
+    https://*.bugsnag.com \
+    https://*.trackjs.com \
+    https://*.google-analytics.com \
+    http://*.cloudinary.com; \
+ media-src \
+    https://changemyworldnow.com:* \
+    https://*.changemyworldnow.com:* \
+    https://*.cloudinary.com \
+    https://*.bugsnag.com \
+    https://*.trackjs.com \
+    https://*.google-analytics.com \
+    http://*.cloudinary.com; \
+ form-action \
+    https://changemyworldnow.com:* \
+    https://*.changemyworldnow.com:*; \
+"
+
+# 1 year for all static assets
+<filesMatch ".(ico|pdf|flv|jpg|jpeg|png|gif|bmp|css|swf|js|woff)$">
+Header set Cache-Control "max-age=31556926, public"
+</filesMatch>
+
+# 4 hours for dynamic assets
+<filesMatch ".(html|htm|php)$">
+Header set Cache-Control "max-age=14400, must-revalidate"
+</filesMatch>
+
+<FilesMatch "\.(ttf|ttc|otf|eot|woff)$">
+    <IfModule mod_headers.c>
+        Header set Access-Control-Allow-Origin "*"
+    </IfModule>
+</FilesMatch>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>iFrame Test</title>
+    <style type='text/css'>
+        html {
+            overflow: hidden;
+        }
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+        iframe {
+            display: block;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+        select {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body id="body">
+    <select id='games' name='games'></select>
+    <iframe id='game' src='' data-uuid='9785yvtv8734yn089cw3nyctr83457y'></iframe>
+    <!-- <form id="form">
+        <input name="input" />
+    </form> -->
+<script type='text/javascript'>
+    // starting individual code
+    var games;
+    var s;
+    var i;
+    var b;
+
+    document.domain = 'changemyworldnow.com';
+
+    /* eslint-disable */
+    function onSubmit(e) {
+        console.log(e.target.input.value);
+        httpGetAsync(e.target.input.value, function (data) {
+          console.log(data);
+        });
+        return false;
+    }
+
+    function httpGetAsync(theUrl, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true); // true for asynchronous
+        xmlHttp.send(null);
+    }
+
+    // document.getElementById('form').onsubmit = onSubmit;
+    /* eslint-enable */
+
+    window.addEventListener('game-event', function (e) {
+        var data;
+
+        // console.log(e.name, e.gameData); // eslint-disable-line no-console
+
+        data = e.gameData;
+        // console.log(data); // eslint-disable-line no-console
+
+        if (!data) return;
+
+        /* eslint-disable indent */
+
+    }, false);
+
+    // document.domain = 'changemyworldnow.com';
+
+    games = {
+        '3D World': '3d-world',
+        'All About You': 'all-about-you',
+        'Animal ID': 'animal-id',
+        'Be Bright': 'be-bright',
+        'DroughtOut': 'drought-out',
+        'Examples': 'examples',
+        'Fire': 'fire',
+        'Happy Fish Face': 'happy-fish-face',
+        'Litterbug': 'litter-bug',
+        'Meerkat': 'meerkat-mania',
+        'Monarch': 'monarch',
+        'Polar Bear': 'polar-bear',
+        'Printmaster': 'printmaster',
+        'Sea Turtle': 'sea-turtle',
+        'Skribble': 'skribble',
+        'Tag It': 'tag-it',
+        'Twirl n Swirl': 'twirl-n-swirl',
+        'Waste Busters': 'waste-busters',
+    };
+
+    function setGameFrameSource(gfs) {
+        document.cookie = 'gameFrameSource=' + gfs;
+        updateGameFrameSource(gfs);
+    }
+
+    function updateGameFrameSource(gfs) {
+        var gameFrameSource = gfs ||
+            document.cookie.replace(/(?:(?:^|.*;\s*)gameFrameSource\s*\=\s*([^;]*).*$)|^.*$/, '$1') ||
+            'polar-bear';
+        i.src = gameFrameSource + '/';
+        s.value = gameFrameSource;
+    }
+
+    window.onresize = function () {
+        if (window.getComputedStyle) {
+          i.style.maxHeight = Math.ceil(Math.min(parseInt(window.getComputedStyle(i).width, 10) * 540 / 960),
+              parseInt(window.getComputedStyle(b).height, 10)) + 'px';
+          i.style.maxWidth = Math.ceil(Math.min(parseInt(window.getComputedStyle(i).height, 10) * 960 / 540),
+              parseInt(window.getComputedStyle(b).width, 10)) + 'px';
+        }
+    };
+
+    window.onload = function () {
+        b = document.getElementById('body');
+        i = document.getElementById('game');
+        s = document.getElementById('games');
+
+        s.onchange = function () {
+            setGameFrameSource(this.value);
+        };
+
+        for (let k in games) {
+            let op = document.createElement('OPTION');
+            op.value = games[k];
+            op.innerHTML = k;
+            s.add(op);
+        }
+        updateGameFrameSource();
+        window.onresize();
+    };
+</script>
+</body>
+</html>
