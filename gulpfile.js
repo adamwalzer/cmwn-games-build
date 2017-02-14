@@ -26,7 +26,9 @@ var stylish = require('gulp-scss-lint-stylish2');
 
 var getGame = function () {
     var index = (_.includes(process.argv, 'build') ? _.indexOf(process.argv, 'build') :
-        _.includes(process.argv, 'watch') ? _.indexOf(process.argv, 'watch') : -1) + 1;
+        _.includes(process.argv, 'b') ? _.indexOf(process.argv, 'b') :
+        _.includes(process.argv, 'watch') ? _.indexOf(process.argv, 'watch') :
+        _.includes(process.argv, 'w') ? _.indexOf(process.argv, 'w') : -1) + 1;
 
     if (!index) return;
 
