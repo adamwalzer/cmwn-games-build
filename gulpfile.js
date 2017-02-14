@@ -62,6 +62,7 @@ var buildTask = [
     'sass',
     'webpack:build',
     'copy-index',
+    'copy-media',
     'clean'
 ];
 gulp.task('default', buildTask);
@@ -256,6 +257,18 @@ gulp.task('copy-index', function () {
             .pipe(gulp.dest('./build/' + game));
         }
     });
+});
+
+gulp.task('copy-media', function () {
+    if (typeof game !== 'string') {
+        gutil.log('Your game argument must be a string');
+        process.exit(1); // eslint-disable-line no-undef
+    }
+
+    // This can be removed once media for every game is transferred to the media server.
+    gulp
+    .src('./library/game-' + game + '/media/**/*' )
+    .pipe(gulp.dest('./build/' + game + '/media'));
 });
 
 // To specify what game you'd like to watch call gulp watch --game game-name
