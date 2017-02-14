@@ -204,7 +204,7 @@ gulp.task('copy-index', function () {
                     var config = JSON.parse(file.contents.toString('utf8'));
                     var injection = `<title>${config.title || _.startCase(config.id)}</title>\n    ` +
                         `<link rel="stylesheet" type="text/css" href="../shared/css/style.css?d=${now}">\n` +
-                        `    <link rel="stylesheet" type="text/css" href="css/style.css?d=${now}">`;
+                        `    <link rel="stylesheet" type="text/css" href="style.css?d=${now}">`;
                     injection += config.head_injection || '';
                     return injection;
                 }
