@@ -369,7 +369,7 @@ gulp.task('lint-scss', function () {
     return gulp
         .src([
             'library/**/*.scss',
-            '!library/skoash',
+            '!library/skoash/**/*.scss',
         ])
         .pipe(scsslint({
             customReport: reporter.issues,
