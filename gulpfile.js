@@ -25,10 +25,13 @@ var scsslint = require('gulp-scss-lint');
 var stylish = require('gulp-scss-lint-stylish2');
 
 var getGame = function () {
-    var index = (_.includes(process.argv, 'build') ? _.indexOf(process.argv, 'build') :
+    var index = (
+        _.includes(process.argv, 'build') ? _.indexOf(process.argv, 'build') :
         _.includes(process.argv, 'b') ? _.indexOf(process.argv, 'b') :
         _.includes(process.argv, 'watch') ? _.indexOf(process.argv, 'watch') :
-        _.includes(process.argv, 'w') ? _.indexOf(process.argv, 'w') : -1) + 1;
+        _.includes(process.argv, 'w') ? _.indexOf(process.argv, 'w') :
+        _.includes(process.argv, 'init-game') ? _.indexOf(process.argv, 'init-game') : -1
+    ) + 1;
 
     if (!index) return;
 
@@ -388,4 +391,13 @@ gulp.task('lint-scss', function () {
         }))
         .pipe(reporter.printSummary)
         .pipe(scsslint.failReporter());
+});
+
+gulp.task('init-game', function () {
+    if (process.platform !== 'win32') { // eslint-disable-line no-undef
+        exec('init-game.sh', [game], function (err, stdout, stderr) {
+            gutil.log(stdout);
+            gutil.log(stderr);
+        });
+    }
 });

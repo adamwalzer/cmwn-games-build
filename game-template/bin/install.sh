@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+git init
+
 echo "[installer] Installing hooks"
 bash $PWD/bin/install-git-hooks.sh
 
