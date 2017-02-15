@@ -345,7 +345,12 @@ gulp.task('clean', cleanTask);
 /*·.·´`·.·•·.·´`·.·•·.·´`·.·•·.·´Lint Tasks`·.·•·.·´`·.·•·.·´`·.·•·.·´`·.·•·.·´`·.·*/
 gulp.task('lint', ['lint-js', 'lint-config', 'lint-scss']);
 gulp.task('lint-js', function () {
-    return gulp.src(['library/**/*.js', '!library/**/*.test.js'])
+    return gulp
+        .src([
+            'library/**/*.js',
+            '!library/**/*.test.js',
+            '!library/**/node_modules/**/*.js',
+        ])
         // eslint() attaches the lint output to the eslint property
         // of the file object so it can be used by other modules.
         .pipe(eslint(eslintConfigJs))
@@ -358,7 +363,12 @@ gulp.task('lint-js', function () {
         .pipe(eslint.failAfterError());
 });
 gulp.task('lint-config', function () {
-    return gulp.src(['gulpfile.js', 'webpack.config.dev.js', 'webpack.config.prod.js'])
+    return gulp
+        .src([
+            'gulpfile.js',
+            'webpack.config.dev.js',
+            'webpack.config.prod.js',
+        ])
         .pipe(eslint(_.defaultsDeep(eslintConfigConfig, eslintConfigJs)))
         .pipe(eslint.format())
         .pipe(eslint.format('stylish', fs.createWriteStream('configlint.log')))
@@ -369,7 +379,7 @@ gulp.task('lint-scss', function () {
     return gulp
         .src([
             'library/**/*.scss',
-            '!library/skoash/**/*.scss',
+            '!library/**/node_modules/**/*.scss',
         ])
         .pipe(scsslint({
             customReport: reporter.issues,
