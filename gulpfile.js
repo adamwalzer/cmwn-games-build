@@ -346,6 +346,7 @@ gulp.task('clean', cleanTask);
 /*·.·´`·.·•·.·´`·.·•·.·´`·.·•·.·´Lint Tasks`·.·•·.·´`·.·•·.·´`·.·•·.·´`·.·•·.·´`·.·*/
 gulp.task('lint', ['lint-js', 'lint-config', 'lint-scss']);
 gulp.task('lint-js', function () {
+    console.log(libDir + '/**/*.js');
     return gulp
         .src([
             libDir + '/**/*.js',
