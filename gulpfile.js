@@ -366,7 +366,11 @@ gulp.task('lint-config', function () {
 });
 gulp.task('lint-scss', function () {
     var reporter = stylish();
-    return gulp.src(['library/**/*.scss'])
+    return gulp
+        .src([
+            'library/**/*.scss',
+            '!library/skoash',
+        ])
         .pipe(scsslint({
             customReport: reporter.issues,
             reporterOutput: 'scsslint.json',
