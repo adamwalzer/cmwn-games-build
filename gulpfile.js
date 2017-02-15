@@ -55,7 +55,7 @@ var env = getEnv(argv.environment || argv.env || 'prod');
 var debug = argv.debug;
 // the flag --local should be passed only when working on localhost
 var local = argv.local || argv.l;
-var libDir = argv.dir || 'library';
+var libDir = argv.dir ? argv.dir + '/' : '';
 var now = Date.now();
 
 // Production build
@@ -346,10 +346,9 @@ gulp.task('clean', cleanTask);
 /*·.·´`·.·•·.·´`·.·•·.·´`·.·•·.·´Lint Tasks`·.·•·.·´`·.·•·.·´`·.·•·.·´`·.·•·.·´`·.·*/
 gulp.task('lint', ['lint-js', 'lint-config', 'lint-scss']);
 gulp.task('lint-js', function () {
-    console.log(libDir + '/**/*.js'); //eslint-disable-line
     return gulp
         .src([
-            libDir + '/**/*.js',
+            'library/' + libDir + '**/*.js',
             '!library/**/*.test.js',
             '!library/**/node_modules/**/*.js',
         ])
@@ -380,7 +379,7 @@ gulp.task('lint-scss', function () {
     var reporter = stylish();
     return gulp
         .src([
-            libDir + '/**/*.scss',
+            'library/' + libDir + '**/*.scss',
             '!library/**/node_modules/**/*.scss',
         ])
         .pipe(scsslint({
