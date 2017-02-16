@@ -395,7 +395,7 @@ gulp.task('lint-scss', function () {
 
 gulp.task('init-game', function () {
     if (process.platform !== 'win32') { // eslint-disable-line no-undef
-        exec('init-game.sh', [game], function (err, stdout, stderr) {
+        exec(`bash init-game.sh ${game}`, function (err, stdout, stderr) {
             gutil.log(stdout);
             gutil.log(stderr);
         });
