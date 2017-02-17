@@ -24,20 +24,6 @@ var eslintConfigConfig = JSON.parse(fs.readFileSync('./.eslintrc_config'));
 var scsslint = require('gulp-scss-lint');
 var stylish = require('gulp-scss-lint-stylish2');
 
-var getGame = function () {
-    var index = (
-        _.includes(process.argv, 'build') ? _.indexOf(process.argv, 'build') :
-        _.includes(process.argv, 'b') ? _.indexOf(process.argv, 'b') :
-        _.includes(process.argv, 'watch') ? _.indexOf(process.argv, 'watch') :
-        _.includes(process.argv, 'w') ? _.indexOf(process.argv, 'w') :
-        _.includes(process.argv, 'init-game') ? _.indexOf(process.argv, 'init-game') : -1
-    ) + 1;
-
-    if (!index) return;
-
-    return _.replace(process.argv[index], '--', '');
-};
-
 var getEnv = function (environment) {
     switch (environment) {
         case 'dev':
@@ -51,7 +37,7 @@ var getEnv = function (environment) {
     }
 };
 
-var game = getGame();
+var game = argv.game || argv.g;
 
 var nolivereload = argv.nolr;
 var env = getEnv(argv.environment || argv.env || 'prod');
@@ -394,6 +380,11 @@ gulp.task('lint-scss', function () {
 });
 
 gulp.task('init-game', function () {
+    if (typeof game !== 'string') {
+        gutil.log('Your game argument must be a string');
+        process.exit(1); // eslint-disable-line no-undef
+    }
+
     if (process.platform !== 'win32') { // eslint-disable-line no-undef
         exec(`bash init-game.sh ${game}`, function (err, stdout, stderr) {
             gutil.log(stdout);
