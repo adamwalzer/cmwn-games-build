@@ -126,18 +126,25 @@ function webpackBuild(callback, isWatch) {
 gulp.task('webpack:build', webpackBuild);
 
 gulp.task('sass', function () {
-    var varsPath = './' + env + '-variables.scss';
+    var config;
+    var folder;
+    var varsPath;
 
     if (typeof game !== 'string') {
         gutil.log('Your game argument must be a string');
         process.exit(1); // eslint-disable-line no-undef
     }
 
+    config = JSON.parse(fs.readFileSync('./library/game-' + game + '/config.json', 'utf8'));
+    folder = config.media_folder || config.id;
+    varsPath = './' + env + '-variables.scss';
+
     gulp
     .src([
         './library/game-' + game + '/**/*.scss',
         './library/game-' + game + '/**/*.css'
     ])
+    .pipe(header(`$game-folder: ${folder};`))
     .pipe(header(fs.readFileSync(varsPath, 'utf8')))
     .pipe(sass({
         includePaths: bourbon.includePaths,
