@@ -144,8 +144,7 @@ gulp.task('sass', function () {
         './library/game-' + game + '/**/*.scss',
         './library/game-' + game + '/**/*.css'
     ])
-    .pipe(header(`$game-folder: ${folder};`))
-    .pipe(header(fs.readFileSync(varsPath, 'utf8')))
+    .pipe(header(`$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8')))
     .pipe(sass({
         includePaths: bourbon.includePaths,
     }).on('error', sass.logError))
@@ -161,7 +160,7 @@ gulp.task('sass', function () {
         './library/shared/css/**/*.scss',
         './library/shared/css/**/*.css'
     ])
-    .pipe(header(fs.readFileSync(varsPath, 'utf8')))
+    .pipe(header(`$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8')))
     .pipe(sass({
         includePaths: bourbon.includePaths,
     }).on('error', sass.logError))
