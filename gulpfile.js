@@ -24,17 +24,6 @@ var eslintConfigConfig = JSON.parse(fs.readFileSync('./.eslintrc_config'));
 var scsslint = require('gulp-scss-lint');
 var stylish = require('gulp-scss-lint-stylish2');
 
-var getGame = function () {
-    var index = (_.includes(process.argv, 'build') ? _.indexOf(process.argv, 'build') :
-        _.includes(process.argv, 'b') ? _.indexOf(process.argv, 'b') :
-        _.includes(process.argv, 'watch') ? _.indexOf(process.argv, 'watch') :
-        _.includes(process.argv, 'w') ? _.indexOf(process.argv, 'w') : -1) + 1;
-
-    if (!index) return;
-
-    return _.replace(process.argv[index], '--', '');
-};
-
 var getEnv = function (environment) {
     switch (environment) {
         case 'dev':
@@ -48,13 +37,14 @@ var getEnv = function (environment) {
     }
 };
 
-var game = getGame();
+var game = argv.game || argv.g;
 
 var nolivereload = argv.nolr;
 var env = getEnv(argv.environment || argv.env || 'prod');
 var debug = argv.debug;
 // the flag --local should be passed only when working on localhost
 var local = argv.local || argv.l;
+var libDir = argv.dir ? argv.dir + '/' : '';
 var now = Date.now();
 
 // Production build
@@ -345,7 +335,12 @@ gulp.task('clean', cleanTask);
 /*·.·´`·.·•·.·´`·.·•·.·´`·.·•·.·´Lint Tasks`·.·•·.·´`·.·•·.·´`·.·•·.·´`·.·•·.·´`·.·*/
 gulp.task('lint', ['lint-js', 'lint-config', 'lint-scss']);
 gulp.task('lint-js', function () {
-    return gulp.src(['library/**/*.js', '!library/**/*.test.js'])
+    return gulp
+        .src([
+            'library/' + libDir + '**/*.js',
+            '!library/**/*.test.js',
+            '!library/**/node_modules/**/*.js',
+        ])
         // eslint() attaches the lint output to the eslint property
         // of the file object so it can be used by other modules.
         .pipe(eslint(eslintConfigJs))
@@ -358,7 +353,12 @@ gulp.task('lint-js', function () {
         .pipe(eslint.failAfterError());
 });
 gulp.task('lint-config', function () {
-    return gulp.src(['gulpfile.js', 'webpack.config.dev.js', 'webpack.config.prod.js'])
+    return gulp
+        .src([
+            'gulpfile.js',
+            'webpack.config.dev.js',
+            'webpack.config.prod.js',
+        ])
         .pipe(eslint(_.defaultsDeep(eslintConfigConfig, eslintConfigJs)))
         .pipe(eslint.format())
         .pipe(eslint.format('stylish', fs.createWriteStream('configlint.log')))
@@ -366,11 +366,29 @@ gulp.task('lint-config', function () {
 });
 gulp.task('lint-scss', function () {
     var reporter = stylish();
-    return gulp.src(['library/**/*.scss'])
+    return gulp
+        .src([
+            'library/' + libDir + '**/*.scss',
+            '!library/**/node_modules/**/*.scss',
+        ])
         .pipe(scsslint({
             customReport: reporter.issues,
             reporterOutput: 'scsslint.json',
         }))
         .pipe(reporter.printSummary)
         .pipe(scsslint.failReporter());
+});
+
+gulp.task('init-game', function () {
+    if (typeof game !== 'string') {
+        gutil.log('Your game argument must be a string');
+        process.exit(1); // eslint-disable-line no-undef
+    }
+
+    if (process.platform !== 'win32') { // eslint-disable-line no-undef
+        exec(`bash init-game.sh ${game}`, function (err, stdout, stderr) {
+            gutil.log(stdout);
+            gutil.log(stderr);
+        });
+    }
 });

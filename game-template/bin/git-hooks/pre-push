@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+sleep 1
+#set -x
+
+target_docker_name="games"
+
+git update-index -q --refresh
+git diff-index --quiet HEAD .
+if [ $? != 0 ]; then
+    echo "[91m[pre-push] failed: branch is dirty. Please stash or commit your changes so the pre-push check can run[0m"
+    exit 157
+fi
+
+while read local_ref local_sha remote_ref remote_sha
+do
+    current_sha1=$(git rev-parse HEAD)
+    current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+    git checkout $local_sha -q
+    echo "[pre-push] checking out $local_sha"
+
+    gamefolder=${PWD##*/}
+    currentdir="$PWD"
+    parentdir="$(dirname "$(dirname "$PWD")")"
+    bash $parentdir/bin/setup-docker.sh $target_docker_name
+    if [ $? != 0 ]
+    then
+        >&2 echo "[91m[pre-push] failed: no $target_docker_name docker-machine running[0m"
+        cd $currentdir && git checkout $current_branch
+        exit 1
+    fi
+
+    echo "[pre-push] connecting to containers"
+    eval $(docker-machine env $target_docker_name)
+
+    echo "[pre-push] Running lint"
+    cd ../../ && docker-compose run -T --rm node gulp lint --dir $gamefolder --color >> push.log 2>&1
+
+    if [ $? != 0 ]; then
+        echo "[91m[pre-push] failed: build failed linting[0m"
+        cat configlint.log 2>/dev/null
+        cat jslint.log 2>/dev/null
+        cd $currentdir && git checkout $current_branch
+        exit 157
+    fi
+
+    echo "" > configlint.log
+    echo "" > jslint.log
+    echo "" > scsslint.json
+    echo "" > push_test.log
+
+    cd $currentdir && git checkout $current_branch
+    echo "[92m[pre-push] success: build passed[0m"
+done

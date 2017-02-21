@@ -1,0 +1,121 @@
+scss_files: 'library/**/*.scss'
+linters:
+    DuplicateProperty:
+        ignore_consecutive: true
+        severity: error
+    IdSelector:
+        enabled: false
+    Indentation:
+        width: 4
+        severity: error
+    SelectorDepth:
+        max_depth: 6
+        severity: error
+    SelectorFormat:
+        enabled: false
+    Comment:
+        enabled: false
+    NestingDepth:
+        max_depth: 6
+        severity: error
+    TrailingZero:
+        enabled: true
+        severity: error
+    PropertySortOrder:
+        order: concentric
+        severity: error
+    UrlFormat:
+        enabled: false
+    VariableForProperty:
+        enabled: true
+        properties:
+            - color
+            - font
+        severity: error
+    # -> /node_modules/scss-lint/data/proper-sort-orders/concentric.txt
+    # also https://github.com/brigade/scss-lint/blob/master/lib/scss_lint/linter/README.md
+    # if you happen to have chrome open instead of a terminal in your other window ;)
+    # doing this to explicitly set each lint to an error because the global severity is ignored.
+    # if a rule becomes too annoying we can switch them individually to warnings
+    BangFormat:
+        severity: error
+    BemDepth:
+        severity: error
+    BorderZero:
+        severity: error
+    ColorKeyword:
+        severity: error
+    ColorVariable:
+        severity: error
+    DebugStatement:
+        severity: error
+    DeclarationOrder:
+        severity: error
+    ElsePlacement:
+        severity: error
+    EmptyLineBetweenBlocks:
+        severity: error
+    EmptyRule:
+        severity: error
+    FinalNewline:
+        severity: error
+    HexLength:
+        severity: error
+    HexNotation:
+        severity: error
+    HexValidation:
+        severity: error
+    ImportantRule:
+        severity: error
+    ImportPath:
+        severity: error
+    LeadingZero:
+        severity: error
+    MergeableSelector:
+        enabled: false
+    NameFormat:
+        severity: error
+    PlaceholderInExtend:
+        severity: error
+    PropertySpelling:
+        severity: error
+    PseudoElement:
+        severity: error
+    QualifyingElement:
+        enabled: false
+    Shorthand:
+        severity: error
+    SingleLinePerProperty:
+        severity: error
+    SingleLinePerSelector:
+        severity: error
+    SpaceAfterComma:
+        severity: error
+    SpaceAfterPropertyColon:
+        severity: error
+    SpaceAfterPropertyName:
+        severity: error
+    SpaceAfterVariableName:
+        severity: error
+    SpaceAroundOperator:
+        severity: error
+    SpaceBeforeBrace:
+        severity: error
+    SpaceBetweenParens:
+        severity: error
+    StringQuotes:
+        severity: error
+    TrailingSemicolon:
+        severity: error
+    TrailingWhitespace:
+        severity: error
+    UnnecessaryMantissa:
+        severity: error
+    UnnecessaryParentReference:
+        severity: error
+    UrlQuotes:
+        severity: error
+    VendorPrefix:
+        severity: error
+    ZeroUnit:
+        severity: error
