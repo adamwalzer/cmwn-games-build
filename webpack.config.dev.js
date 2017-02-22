@@ -4,7 +4,7 @@ var webpack = require('webpack');
 module.exports = {
     context: path.join(__dirname, 'library'),
     entry: null,
-    devtool: 'cheap-module-inline-source-map',
+    devtool: 'source-map',
     resolve: {
         root: [path.resolve(__dirname, 'library'), path.resolve(__dirname, 'node_modules')],
         extensions: ['', '.js', '.json'],
