@@ -135,39 +135,43 @@ gulp.task('sass', function () {
         process.exit(1); // eslint-disable-line no-undef
     }
 
-    config = JSON.parse(fs.readFileSync('./library/game-' + game + '/config.json', 'utf8'));
-    folder = config.media_folder || config.id;
-    varsPath = './' + env + '-variables.scss';
+    try {
+        config = JSON.parse(fs.readFileSync('./library/game-' + game + '/config.json', 'utf8'));
+        folder = config.media_folder || config.id;
+        varsPath = './' + env + '-variables.scss';
 
-    gulp
-    .src([
-        './library/game-' + game + '/**/*.scss',
-        './library/game-' + game + '/**/*.css'
-    ])
-    .pipe(header(`$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8')))
-    .pipe(sass({
-        includePaths: bourbon.includePaths,
-    }).on('error', sass.logError))
-    .pipe(concat('style.css'))
-    .pipe(sourcemaps.init())
-    .pipe(postcss([autoprefixer({ browsers: ['last 5 versions'] })]))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./build/' + game))
-    .pipe(livereload());
+        gulp
+        .src([
+            './library/game-' + game + '/**/*.scss',
+            './library/game-' + game + '/**/*.css'
+        ])
+        .pipe(header(`$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8')))
+        .pipe(sass({
+            includePaths: bourbon.includePaths,
+        }).on('error', sass.logError))
+        .pipe(concat('style.css'))
+        .pipe(sourcemaps.init())
+        .pipe(postcss([autoprefixer({ browsers: ['last 5 versions'] })]))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./build/' + game))
+        .pipe(livereload());
 
-    gulp
-    .src([
-        './library/shared/css/**/*.scss',
-        './library/shared/css/**/*.css'
-    ])
-    .pipe(header(`$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8')))
-    .pipe(sass({
-        includePaths: bourbon.includePaths,
-    }).on('error', sass.logError))
-    .pipe(concat('style.css'))
-    .pipe(postcss([autoprefixer({ browsers: ['last 5 versions'] })]))
-    .pipe(gulp.dest('./build/shared/css'))
-    .pipe(livereload());
+        gulp
+        .src([
+            './library/shared/css/**/*.scss',
+            './library/shared/css/**/*.css'
+        ])
+        .pipe(header(`$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8')))
+        .pipe(sass({
+            includePaths: bourbon.includePaths,
+        }).on('error', sass.logError))
+        .pipe(concat('style.css'))
+        .pipe(postcss([autoprefixer({ browsers: ['last 5 versions'] })]))
+        .pipe(gulp.dest('./build/shared/css'))
+        .pipe(livereload());
+    } catch(err) {
+        gutil.log(err);
+    }
 });
 
 gulp.task('copy-index', function () {
