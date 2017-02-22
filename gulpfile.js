@@ -129,7 +129,7 @@ gulp.task('sass', function () {
     var config;
     var folder;
     var scssHeader = '';
-    var varsPath;
+    var varsPath = './' + env + '-variables.scss';
 
     if (typeof game !== 'string') {
         gutil.log('Your game argument must be a string');
@@ -158,7 +158,6 @@ gulp.task('sass', function () {
         gutil.log(err);
     }
 
-    varsPath = './' + env + '-variables.scss';
 
     gulp
     .src([
