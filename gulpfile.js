@@ -128,6 +128,7 @@ gulp.task('webpack:build', webpackBuild);
 gulp.task('sass', function () {
     var config;
     var folder;
+    var scssHeader = '';
     var varsPath;
 
     if (typeof game !== 'string') {
@@ -138,30 +139,14 @@ gulp.task('sass', function () {
     try {
         config = JSON.parse(fs.readFileSync('./library/game-' + game + '/config.json', 'utf8'));
         folder = config.media_folder || config.id;
-        varsPath = './' + env + '-variables.scss';
-
-        gulp
-        .src([
-            './library/game-' + game + '/**/*.scss',
-            './library/game-' + game + '/**/*.css'
-        ])
-        .pipe(header(`$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8')))
-        .pipe(sass({
-            includePaths: bourbon.includePaths,
-        }).on('error', sass.logError))
-        .pipe(concat('style.css'))
-        .pipe(sourcemaps.init())
-        .pipe(postcss([autoprefixer({ browsers: ['last 5 versions'] })]))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./build/' + game))
-        .pipe(livereload());
+        scssHeader = `$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8');
 
         gulp
         .src([
             './library/shared/css/**/*.scss',
             './library/shared/css/**/*.css'
         ])
-        .pipe(header(`$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8')))
+        .pipe(header(scssHeader))
         .pipe(sass({
             includePaths: bourbon.includePaths,
         }).on('error', sass.logError))
@@ -172,6 +157,25 @@ gulp.task('sass', function () {
     } catch(err) {
         gutil.log(err);
     }
+
+    varsPath = './' + env + '-variables.scss';
+
+    gulp
+    .src([
+        './library/game-' + game + '/**/*.scss',
+        './library/game-' + game + '/**/*.css'
+    ])
+    .pipe(header(scssHeader))
+    .pipe(sass({
+        includePaths: bourbon.includePaths,
+    }).on('error', sass.logError))
+    .pipe(concat('style.css'))
+    .pipe(sourcemaps.init())
+    .pipe(postcss([autoprefixer({ browsers: ['last 5 versions'] })]))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./build/' + game))
+    .pipe(livereload());
+
 });
 
 gulp.task('copy-index', function () {
