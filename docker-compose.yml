@@ -2,7 +2,7 @@ version: '2'
 services:
   nginx:
     image: cmwn/games-nginx:0.1
-    container_name: cmwn_games_web
+    container_name: cmwn_games_build_web
     hostname: "games-local"
     domainname: "changemyworldnow.com"
     ports:
@@ -10,7 +10,7 @@ services:
     volumes:
       - ./:/var/www/
   node:
-    container_name: cmwn_games_node
+    container_name: cmwn_games_build_node
     build: ./docker/node
     environment:
       DOCKER_HOST_IP: "192.168.99.101"
