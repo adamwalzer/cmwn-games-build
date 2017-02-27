@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+mkdir build
+cp local.html build/index.html
+
 bash $PWD/bin/setup-docker.sh games
 if [ $? != 0 ]
 then
