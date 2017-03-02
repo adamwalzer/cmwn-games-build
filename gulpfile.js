@@ -182,79 +182,67 @@ gulp.task('copy-index', function () {
     }
 
     fs.stat(indexPath, function (err) {
-        if (err == null) {
-            gulp
-            .src(indexPath)
-            .pipe(inject(gulp.src('./livereload.js'), {
-                starttag: '<!-- inject:livereload -->',
-                transform: function (filePath, file) {
-                    if (livereload.server) {
-                        return '<script>\n' + file.contents.toString('utf8') + '\n</script>';
-                    }
-                }
-            }))
-            .pipe(gulp.dest('./build/' + game));
-        } else {
-            gulp
-            .src('./index.html')
-            .pipe(inject(gulp.src('./library/game-' + game + '/config.json'), {
-                starttag: '<!-- inject:head -->',
-                transform: function (filePath, file) {
-                    var config = JSON.parse(file.contents.toString('utf8'));
-                    var injection = `<title>${config.title || _.startCase(config.id)}</title>\n    ` +
-                        `<link rel="stylesheet" type="text/css" href="../shared/css/style.css?d=${now}">\n` +
-                        `    <link rel="stylesheet" type="text/css" href="style.css?d=${now}">`;
-                    injection += config.head_injection || '';
-                    return injection;
-                }
-            }))
-            .pipe(inject(gulp.src('./test-platform-integration.js'), {
-                starttag: '<!-- inject:integration -->',
-                transform: function (filePath, file) {
-                    if (!local) {
-                        return '<script>\n    ' +
-                            file.contents.toString('utf8') + '\n</script>';
-                    }
-                }
-            }))
-            .pipe(inject(gulp.src('./library/game-' + game + '/config.json'), {
-                starttag: '<!-- inject:body -->',
-                transform: function (filePath, file) {
-                    var config = JSON.parse(file.contents.toString('utf8'));
-                    var folder = config.media_folder || config.id;
-                    var min = debug ? '' : '.min';
+        if (err) indexPath = './index.html';
 
-                    return (
-                        `<div id="${config.id}"></div>\n    ` +
-                        '<script type="text/javascript" ' +
-                        `src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react${min}.js">` +
-                        '</script>\n    ' +
-                        '<script type="text/javascript" ' +
-                        `src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react-dom${min}.js">` +
-                        '</script>\n    ' +
-                        '<script type="text/javascript" ' +
-                        `src="../framework/skoash.${config.skoash}.js"></script>\n    ` +
-                        `<script>window.CMWN={gameFolder:"${folder}"};</script>\n    ` +
-                        `<script type="text/javascript" src="./ai.js?d=${now}"></script>`
-                    );
+        gulp
+        .src(indexPath)
+        .pipe(inject(gulp.src('./library/game-' + game + '/config.json'), {
+            starttag: '<!-- inject:head -->',
+            transform: function (filePath, file) {
+                var config = JSON.parse(file.contents.toString('utf8'));
+                var injection = `<title>${config.title || _.startCase(config.id)}</title>\n    ` +
+                    `<link rel="stylesheet" type="text/css" href="../shared/css/style.css?d=${now}">\n` +
+                    `    <link rel="stylesheet" type="text/css" href="style.css?d=${now}">`;
+                injection += config.head_injection || '';
+                return injection;
+            }
+        }))
+        .pipe(inject(gulp.src('./test-platform-integration.js'), {
+            starttag: '<!-- inject:integration -->',
+            transform: function (filePath, file) {
+                if (!local) {
+                    return '<script>\n    ' +
+                        file.contents.toString('utf8') + '\n</script>';
                 }
-            }))
-            .pipe(inject(gulp.src('./livereload.js'), {
-                starttag: '<!-- inject:livereload -->',
-                transform: function (filePath, file) {
-                    if (livereload.server) {
-                        return '<script>\n    ' + file.contents.toString('utf8') + '  \n</script>';
-                    }
+            }
+        }))
+        .pipe(inject(gulp.src('./library/game-' + game + '/config.json'), {
+            starttag: '<!-- inject:body -->',
+            transform: function (filePath, file) {
+                var config = JSON.parse(file.contents.toString('utf8'));
+                var folder = config.media_folder || config.id;
+                var min = debug ? '' : '.min';
+
+                return (
+                    `<div id="${config.id}"></div>\n    ` +
+                    '<script type="text/javascript" ' +
+                    `src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react${min}.js">` +
+                    '</script>\n    ' +
+                    '<script type="text/javascript" ' +
+                    `src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.2/react-dom${min}.js">` +
+                    '</script>\n    ' +
+                    '<script type="text/javascript" ' +
+                    `src="../framework/skoash.${config.skoash}.js"></script>\n    ` +
+                    `<script>window.CMWN={gameFolder:"${folder}"};</script>\n    ` +
+                    `<script type="text/javascript" src="./ai.js?d=${now}"></script>`
+                );
+            }
+        }))
+        .pipe(inject(gulp.src('./livereload.js'), {
+            starttag: '<!-- inject:livereload -->',
+            transform: function (filePath, file) {
+                if (livereload.server) {
+                    return '<script>\n    ' + file.contents.toString('utf8') + '  \n</script>';
                 }
-            }))
-            .pipe(inject(gulp.src('./google-analytics.js'), {
-                starttag: '<!-- inject:ga -->',
-                transform: function (filePath, file) {
-                    return '<script>\n    ' + file.contents.toString('utf8') + '\n    </script>';
-                }
-            }))
-            .pipe(gulp.dest('./build/' + game));
-        }
+            }
+        }))
+        .pipe(inject(gulp.src('./google-analytics.js'), {
+            starttag: '<!-- inject:ga -->',
+            transform: function (filePath, file) {
+                return '<script>\n    ' + file.contents.toString('utf8') + '\n    </script>';
+            }
+        }))
+        .pipe(gulp.dest('./build/' + game));
     });
 });
 
