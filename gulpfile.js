@@ -126,38 +126,34 @@ function webpackBuild(callback, isWatch) {
 gulp.task('webpack:build', webpackBuild);
 
 gulp.task('sass', function () {
+    var varsPath;
     var config;
     var folder;
-    var scssHeader = '';
-    var varsPath = './' + env + '-variables.scss';
+    var scssHeader;
 
     if (typeof game !== 'string') {
         gutil.log('Your game argument must be a string');
         process.exit(1); // eslint-disable-line no-undef
     }
 
-    try {
-        config = JSON.parse(fs.readFileSync('./library/game-' + game + '/config.json', 'utf8'));
-        folder = config.media_folder || config.id;
-        scssHeader = `$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8');
+    varsPath = './' + env + '-variables.scss';
+    config = JSON.parse(fs.readFileSync('./library/game-' + game + '/config.json', 'utf8'));
+    folder = config.media_folder || config.id;
+    scssHeader = `$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8');
 
-        gulp
-        .src([
-            './library/shared/css/**/*.scss',
-            './library/shared/css/**/*.css'
-        ])
-        .pipe(header(scssHeader))
-        .pipe(sass({
-            includePaths: bourbon.includePaths,
-        }).on('error', sass.logError))
-        .pipe(concat('style.css'))
-        .pipe(postcss([autoprefixer({ browsers: ['last 5 versions'] })]))
-        .pipe(gulp.dest('./build/shared/css'))
-        .pipe(livereload());
-    } catch(err) {
-        gutil.log(err);
-    }
-
+    gulp
+    .src([
+        './library/shared/css/**/*.scss',
+        './library/shared/css/**/*.css'
+    ])
+    .pipe(header(scssHeader))
+    .pipe(sass({
+        includePaths: bourbon.includePaths,
+    }).on('error', sass.logError))
+    .pipe(concat('style.css'))
+    .pipe(postcss([autoprefixer({ browsers: ['last 5 versions'] })]))
+    .pipe(gulp.dest('./build/shared/css'))
+    .pipe(livereload());
 
     gulp
     .src([
