@@ -268,7 +268,7 @@ function watchTask() {
         process.exit(1); // eslint-disable-line no-undef
     }
 
-    env = 'dev';
+    env = argv.environment || argv.env || 'dev';
     if (!nolivereload) livereload.listen();
 
     watch([
