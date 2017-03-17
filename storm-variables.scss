@@ -1,0 +1,6 @@
+$media-server: 'localhost:3000/f/';
+$media: $media-server + 'games/#{$game-folder}/';
+$sprite: $media + 'sprites-animations/';
+$image: $media + 'image-assets/';
+$frame: $media + 'frames/';
+$font: $media + 'fonts/';

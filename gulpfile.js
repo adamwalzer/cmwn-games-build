@@ -42,6 +42,7 @@ var game = argv.game || argv.g;
 var nolivereload = argv.nolr;
 var env = getEnv(argv.environment || argv.env || 'prod');
 var debug = argv.debug;
+var storm = argv.storm;
 // the flag --local should be passed only when working on localhost
 var local = argv.local || argv.l;
 var libDir = argv.dir ? argv.dir + '/' : '';
@@ -61,7 +62,7 @@ gulp.task('b', buildTask);
 
 function defineEntries(config) {
     // modify some webpack config options
-    var varsPath = '../' + env + '-variables.js';
+    var varsPath = '../' + (storm ? 'storm' : env) + '-variables.js';
     var mediaPath = '../make_media_globals.js';
 
     if (typeof game !== 'string') {
@@ -82,7 +83,7 @@ function defineEntries(config) {
         './game-' + game + '/index.js',
     ];
 
-    if (env === 'dev' && local) {
+    if (local) {
         config.entry.push('webpack/hot/dev-server');
         config.entry.push('webpack-dev-server/client?http://localhost:8080/');
     }
@@ -110,7 +111,7 @@ function webpackBuild(callback, isWatch) {
         callback();
     });
 
-    if (isWatch && env === 'dev' && local) {
+    if (isWatch && local) {
         server = new WebpackDevServer(compiler, {
             contentBase: 'build',
             hot: true,
@@ -136,7 +137,7 @@ gulp.task('sass', function () {
         process.exit(1); // eslint-disable-line no-undef
     }
 
-    varsPath = './' + env + '-variables.scss';
+    varsPath = './' + (storm ? 'storm' : env) + '-variables.scss';
     config = JSON.parse(fs.readFileSync('./library/game-' + game + '/config.json', 'utf8'));
     folder = config.media_folder || config.id;
     scssHeader = `$game-folder: '${folder}';` + fs.readFileSync(varsPath, 'utf8');
