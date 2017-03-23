@@ -8,6 +8,7 @@ var webpack = require('webpack');
 var webpackDevConfig = require('./webpack.config.dev.js');
 var webpackProdConfig = require('./webpack.config.prod.js');
 var fs = require('fs');
+var path = require('path');
 var sourcemaps = require('gulp-sourcemaps');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
@@ -47,6 +48,13 @@ var storm = argv.storm;
 var local = argv.local || argv.l;
 var libDir = argv.dir ? argv.dir + '/' : '';
 var now = Date.now();
+
+var getFolders = function (dir) {
+    return fs.readdirSync(dir)
+      .filter(function (file) {
+          return fs.statSync(path.join(dir, file)).isDirectory();
+      });
+};
 
 // Production build
 var buildTask = [
@@ -387,6 +395,21 @@ gulp.task('init-game', function () {
         exec(`bash init-game.sh ${game}`, function (err, stdout, stderr) {
             gutil.log(stdout);
             gutil.log(stderr);
+        });
+    }
+});
+
+gulp.task('status', function () {
+    var folders = getFolders('library');
+
+    if (process.platform !== 'win32') { // eslint-disable-line no-undef
+        _.map(folders, function (folder) {
+            exec(`cd library/${folder} && git status`, function (err, stdout, stderr) {
+                if (_.includes(stdout, 'nothing to commit, working directory clean')) return;
+                gutil.log( gutil.colors.red(folder));
+                gutil.log(stdout);
+                gutil.log(stderr);
+            });
         });
     }
 });
