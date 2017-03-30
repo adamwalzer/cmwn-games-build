@@ -8,6 +8,7 @@ var webpack = require('webpack');
 var webpackDevConfig = require('./webpack.config.dev.js');
 var webpackProdConfig = require('./webpack.config.prod.js');
 var fs = require('fs');
+var path = require('path');
 var sourcemaps = require('gulp-sourcemaps');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
@@ -48,12 +49,19 @@ var local = argv.local || argv.l;
 var libDir = argv.dir ? argv.dir + '/' : '';
 var now = Date.now();
 
+var getFolders = function (dir) {
+    return fs.readdirSync(dir)
+      .filter(function (file) {
+          return fs.statSync(path.join(dir, file)).isDirectory();
+      });
+};
+
 // Production build
 var buildTask = [
     'sass',
     'webpack:build',
     'copy-index',
-    'copy-media',
+    'copy-html',
     'clean'
 ];
 gulp.task('default', buildTask);
@@ -247,16 +255,15 @@ gulp.task('copy-index', function () {
     });
 });
 
-gulp.task('copy-media', function () {
+gulp.task('copy-html', function () {
     if (typeof game !== 'string') {
         gutil.log('Your game argument must be a string');
         process.exit(1); // eslint-disable-line no-undef
     }
 
-    // This can be removed once media for every game is transferred to the media server.
     gulp
-    .src('./library/game-' + game + '/media/**/*' )
-    .pipe(gulp.dest('./build/' + game + '/media'));
+    .src('./library/game-' + game + '/html/**/*' )
+    .pipe(gulp.dest('./build/' + game));
 });
 
 // To specify what game you'd like to watch call gulp watch --game game-name
@@ -288,9 +295,9 @@ function watchTask() {
     });
 
     watch([
-        'library/game-' + game + '/media/**/*',
+        'library/game-' + game + '/html/**/*',
     ], function () {
-        gulp.start('copy-media');
+        gulp.start('copy-html');
     });
 
     watch([
@@ -387,6 +394,21 @@ gulp.task('init-game', function () {
         exec(`bash init-game.sh ${game}`, function (err, stdout, stderr) {
             gutil.log(stdout);
             gutil.log(stderr);
+        });
+    }
+});
+
+gulp.task('status', function () {
+    var folders = getFolders('library');
+
+    if (process.platform !== 'win32') { // eslint-disable-line no-undef
+        _.map(folders, function (folder) {
+            exec(`cd library/${folder} && git status`, function (err, stdout, stderr) {
+                if (_.includes(stdout, 'nothing to commit, working directory clean')) return;
+                gutil.log( gutil.colors.red(folder));
+                gutil.log(stdout);
+                gutil.log(stderr);
+            });
         });
     }
 });
