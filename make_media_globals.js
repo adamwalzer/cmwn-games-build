@@ -10,6 +10,7 @@
     const IMAGE = 'image-assets/';
     const SPRITE = 'sprites-animations/';
     const FRAME = 'frames/';
+    const VIDEO = 'videos/';
     const FONT = 'fonts/';
     const SHARED = 'shared/';
     const MOCK_GAME = 'mock-game/';
@@ -23,6 +24,7 @@
     MEDIA.IMAGE = MEDIA.GAME + IMAGE;
     MEDIA.SPRITE = MEDIA.GAME + SPRITE;
     MEDIA.FRAME = MEDIA.GAME + FRAME;
+    MEDIA.VIDEO = MEDIA.GAME + VIDEO;
     MEDIA.FONT = MEDIA.GAME + FONT;
 
     MEDIA.MOCK = {};
@@ -32,6 +34,7 @@
     MEDIA.MOCK.IMAGE = MEDIA.MOCK.GAME + IMAGE;
     MEDIA.MOCK.SPRITE = MEDIA.MOCK.GAME + SPRITE;
     MEDIA.MOCK.FRAME = MEDIA.MOCK.GAME + FRAME;
+    MEDIA.MOCK.VIDEO = MEDIA.MOCK.GAME + VIDEO;
     MEDIA.MOCK.FONT = MEDIA.MOCK.GAME + FONT;
 
     window.CMWN.MEDIA = MEDIA;
